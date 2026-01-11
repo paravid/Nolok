@@ -1,0 +1,40 @@
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+
+local Global = (getgenv and getgenv()) or shared
+local getsynasset = getsynasset or getcustomasset or function() warn("no getcustomasset/getsynasset") end
+Global.Notification = function(Title, Text, Duration)
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = Title or "",
+		Text = Text or "",
+		Duration = Duration or 3
+	})
+end
+
+Global.StopScript = function()
+	if game:GetService("Players").LocalPlayer.Character.Name ~= "GelatekReanimate" then
+        Notification("Not Reanimated")
+		error("Not Reanimated")
+end
+
+Global.AntiScript = function()
+	local part = Instance.new("Part")
+	part.Transparency = 1
+	part.Anchored = true
+	part.CanCollide = false
+	part.Name = "ScriptCheck"
+	part.Parent = game:FindFirstChildOfClass("TestService")
+end
+
+Global.GetLoadLibrary = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/lib/LoadLibrary.lua"))()
+end
+
+Global.StopScript = function()
+   plr.Character.Humanoid.Health = 0
+end
+
+Global.PlayAnimation = function(ID,AudioPath)
+  plr.Character.Humanoid.Health = 0
+end
+a
