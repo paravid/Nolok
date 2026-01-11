@@ -1,0 +1,96 @@
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+
+local Global = (getgenv and getgenv()) or shared
+local getsynasset = getsynasset or getcustomasset or function() warn("no getcustomasset/getsynasset") end
+Global.Notification = function(Title, Text, Duration)
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = Title or "",
+		Text = Text or "",
+		Duration = Duration or 3
+	})
+end
+
+Global.GetLoadLibrary = function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/lib/LoadLibrary.lua"))()
+end
+
+Global.StopScript = function()
+   plr.Character.Humanoid.Health = 0
+end
+
+Global.PlayAnimation = function(ID,AudioPath)
+
+	local Character = game.Players.LocalPlayer.Character
+	Character["Humanoid"].WalkSpeed = 8
+	local CurrentID = ID
+	local Sexys = game:GetObjects("rbxassetid://"..tostring(CurrentID))[1]
+	local sexy = Sexys
+	sexy.Name = "AnimPlayer"
+	sexy.Parent = Character
+
+	task.wait(1)
+
+	local Torso = Character:WaitForChild("Torso")
+	local N,RJ = Torso["Neck"],Character["HumanoidRootPart"]["RootJoint"] -- Neck/RootJoint
+	local RS,LS = Torso["Right Shoulder"],Torso["Left Shoulder"]-- Shoulders
+	local RH,LH = Torso["Right Hip"],Torso["Left Hip"]-- Hips
+	local Frames = {}
+	local Positions = {}
+	local Sound = Instance.new("Sound")
+	Sound.Parent = Character.Torso
+	Sound.Looped = true
+	Sound.Name = "Music"
+	Sound.Volume = 1
+	if AudioPath then
+		pcall(function()
+			Sound.SoundId = getsynasset(AudioPath)
+		end)
+		Sound:Play()
+	end
+
+	for i,v in pairs(sexy:GetChildren()) do
+		table.insert(Frames, v.Time)
+		Positions[v.Time] = {}
+		for _,g in pairs(v:GetDescendants()) do 
+			g.Parent = v; table.insert(Positions[v.Time],g)
+		end
+	end
+	if Character.Humanoid:FindFirstChild("Animator") then
+		Character.Humanoid.Animator:Destroy()
+	end
+	while true do
+		if Global.Stopped == true then break end
+		for i,v in pairs(Frames) do
+			task.spawn(function()
+				if Global.Stopped == true then return end
+				if Frames[i-1] then
+					task.wait(Frames[i-1])
+				end
+				for i2,v2 in pairs(Positions[v]) do
+					if v2.Name == "Right Arm" then
+						RS.Transform = v2.CFrame
+					end
+					if v2.Name == "Left Arm" then
+						LS.Transform = v2.CFrame
+					end
+					if v2.Name == "Right Leg" then
+						RH.Transform = v2.CFrame
+					end
+					if v2.Name == "Left Leg" then
+						LH.Transform = v2.CFrame
+					end
+					if v2.Name == "Torso" then
+						RJ.Transform = v2.CFrame
+					end
+					if v2.Name == "Head" then
+						N.Transform = v2.CFrame
+					end
+				end
+			end)
+		end
+		task.wait(Frames[#Frames])
+	end
+	Sound:Destroy()
+	Sexys:Destroy()
+end
