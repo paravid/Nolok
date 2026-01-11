@@ -11,6 +11,15 @@ Global.Notification = function(Title, Text, Duration)
 	})
 end
 
+Global.AntiScript = function()
+	local part = Instance.new("Part")
+	part.Transparency = 1
+	part.Anchored = true
+	part.CanCollide = false
+	part.Name = "ScriptCheck"
+	part.Parent = game:FindFirstChildOfClass("TestService")
+end
+
 Global.GetLoadLibrary = function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/lib/LoadLibrary.lua"))()
 end
